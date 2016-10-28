@@ -198,8 +198,31 @@ namespace IntegralWinForms.Classes
             return S;
             //}
           }
-       
-        
+
+        public double ParallelTask(double a, double b, long N, int numb)
+        {
+            Task[] tasks = new Task[numb];
+            double h = (b - a) / n;
+            double S = 0;
+            for (int i = 0; i < numb; i++)
+            {
+                int i1 = i;
+                tasks[i] = Task.Run(() =>
+                {
+                    double S1 = 0;
+                    for (int j = i1 * (int)(n / numb); j < i1 * (int)(n / numb) + (int)(n / numb); j++)
+                    {
+                        S1 += F11(a + j * h);
+                    }
+                    S += S1;
+                });
+            }
+
+            Task.WaitAll(tasks);
+
+            S *= h;
+            return S;
+        }
     }
 
 }
